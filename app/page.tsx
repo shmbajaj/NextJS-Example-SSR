@@ -16,7 +16,7 @@ export default function Home() {
         </Link>
         <br />
         { cookies().get("access_token")?.value ? <div>
-        <Link href="/signout">
+        <Link href="/signout" prefetch={false}>
              Sign out
          </Link>
         </div> : <p>User not logged in</p>

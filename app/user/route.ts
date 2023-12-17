@@ -15,7 +15,6 @@ export async function GET(request: Request) {
             cookies().set("access_token", user.access_token, {
                 maxAge: 3600 * 24
            });
-   
            return new Response(JSON.stringify(user), {status: 200, headers: {'Content-Type': 'application/json'}});
         }
     } catch (error : any) {
