@@ -1,36 +1,38 @@
-import AuthClient from "@/util/AuthClient";
-import {cookies} from "next/headers";
-
+import AuthClient from '@/util/AuthClient';
+import { cookies } from 'next/headers';
 
 export async function GET(request: Request) {
-    const url = new URL(request.url);
-    const queryParams = new URLSearchParams(url.search);
+  const url = new URL(request.url);
+  const queryParams = new URLSearchParams(url.search);
 
-    const token : string  | null  = queryParams.get('code');
+  const token: string | null = queryParams.get('code');
 
-
-    try {
-        if(token != null){
-            const user: any = await AuthClient.getUser(token);
-            cookies().set("access_token", user.access_token, {
-                maxAge: 3600 * 24
-           });
-           return new Response(JSON.stringify(user), {status: 200, headers: {'Content-Type': 'application/json'}});
-        }
-    } catch (error : any) {
-        try {
-            const {detail} = JSON.parse(error.message.split('\n').pop());
-
-            if (detail === 'Token Expired - token expired') {
-                return new Response('Token expired', {status: 401});
-            }
-        } catch (e) {
-            console.log('Error parsing response:', e);
-        }
-
-        console.log("LOG:", error);
-        return new Response('Internal server error', {status: 500});
+  try {
+    if (!token) {
+      throw Error('Token is Missing');
     }
+    const user = await AuthClient.getUser(token);
+    if (!user.access_token) throw Error('Access Token is Missing');
+    cookies().set('access_token', user.access_token, {
+      maxAge: 3600 * 24,
+    });
+    return new Response(JSON.stringify(user), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error: any) {
+    console.log('LOG:', error);
+    // try {
+    //   const { detail } = JSON.parse(error.message.split('\n').pop());
 
+    //   if (detail === 'Token Expired - token expired') {
+    //     return new Response('Token expired', { status: 401 });
+    //   }
+    // } catch (e) {
+    //   console.log('Error parsing response:', e);
+    // }
 
+    // console.log('LOG:', error);
+    return new Response('Internal server error', { status: 500 });
+  }
 }
