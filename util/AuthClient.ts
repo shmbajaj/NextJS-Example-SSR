@@ -6,4 +6,5 @@ const ORG_ID: string = process.env.ORG_ID ? process.env.ORG_ID : '';
 
 const authClient = new AuthLiteClient(API_KEY, API_SECRET, ORG_ID);
 
+await authClient.init();
 export default authClient;
