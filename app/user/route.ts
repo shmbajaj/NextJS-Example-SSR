@@ -22,17 +22,6 @@ export async function GET(request: Request) {
     });
   } catch (error: any) {
     console.log('LOG:', error);
-    // try {
-    //   const { detail } = JSON.parse(error.message.split('\n').pop());
-
-    //   if (detail === 'Token Expired - token expired') {
-    //     return new Response('Token expired', { status: 401 });
-    //   }
-    // } catch (e) {
-    //   console.log('Error parsing response:', e);
-    // }
-
-    // console.log('LOG:', error);
     return new Response('Internal server error', { status: 500 });
   }
 }
